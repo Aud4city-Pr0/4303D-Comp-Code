@@ -12,8 +12,8 @@ ez::Drive chassis(
     {-4, -5, -6},  // Right Chassis Ports (negative port will reverse it!)
 
     7,      // IMU Port
-    4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
-    343);   // Wheel RPM
+    2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
+    450);   // Wheel RPM
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -133,12 +133,7 @@ void opcontrol() {
       chassis.pid_tuner_iterate();  // Allow PID Tuner to iterate
     }
 
-    chassis.opcontrol_tank();  // Tank control
-    // chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
-    // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
-    // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
-    // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
-
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // . . .
     // Put more user control code here!
     // . . .
