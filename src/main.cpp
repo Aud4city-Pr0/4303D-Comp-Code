@@ -137,6 +137,15 @@ void opcontrol() {
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
+    if (master.get_digital(DIGITAL_R1)) {
+      //intake.move(127);
+    } 
+    else if (master.get_digital(DIGITAL_L2)) {
+      //intake.move(-127);
+    } 
+    else {
+      //intake.move(0);
+    }
 
     // . . .
     // Put more user control code here!
