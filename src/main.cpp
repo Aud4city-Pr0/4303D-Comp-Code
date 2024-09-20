@@ -139,6 +139,19 @@ void opcontrol() {
       chassis.pid_tuner_iterate();  // Allow PID Tuner to iterate
     }
 
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
+    // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
+    // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
+    if (master.get_digital(DIGITAL_R1)) {
+      //intake.move(127);
+    } 
+    else if (master.get_digital(DIGITAL_L2)) {
+      //intake.move(-127);
+    } 
+    else {
+      //intake.move(0);
+    }
 
     chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // . . .
