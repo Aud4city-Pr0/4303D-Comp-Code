@@ -5,6 +5,12 @@
 // https://ez-robotics.github.io/EZ-Template/
 /////
 
+// Our varibales for controling the robot
+// This is where you will see the boolean vars for our bot
+
+// This varabile controlls the exstention of our mogo mech
+bool IsExteneded = false;
+
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
@@ -121,10 +127,10 @@ void opcontrol() {
       //  When enabled:
       //  * use A and Y to increment / decrement the constants
       //  * use the arrow keys to navigate the constants
-      if (master.get_digital_new_press(DIGITAL_X))
+      if (master.get_digital_new_press(DIGITAL_X)) {
         chassis.pid_tuner_toggle();
 
-      // Trigger the selected autonomous routine
+      } // Trigger the selected autonomous routine
       if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)) {
         autonomous();
         chassis.drive_brake_set(driver_preference_brake);
@@ -133,14 +139,32 @@ void opcontrol() {
       chassis.pid_tuner_iterate();  // Allow PID Tuner to iterate
     }
 
-    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
-    // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
-    // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
-    // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
 
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // . . .
     // Put more user control code here!
     // . . .
+
+    // The driver controlls section
+    // In this section, you will find the button controlls for our mechs (Intake, Mog, Etc.)
+
+    if(master.get_digital(DIGITAL_A) && IsExteneded == false) {
+      // this will extend the mogo
+      IsExteneded = true;
+    } else if(master.get_digital(DIGITAL_A) && IsExteneded == true) {
+      // this will retract the mogo
+      IsExteneded = false;
+    }
+
+    if (master.get_digital(DIGITAL_R1)) {
+      //intake.move(127);
+    } 
+    else if (master.get_digital(DIGITAL_L2)) {
+      //intake.move(-127);
+    } 
+    else {
+      //intake.move(0);
+    }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
