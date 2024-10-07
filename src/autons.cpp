@@ -37,7 +37,7 @@ void default_constants() {
 // Mech enums
 // This is where you will find enums for our mechs
 
-// The pistion exstention status enum
+// The pistion exstention staus enum
 enum PistionStatus {
   RETRACT = 0,
   EXTEND = 1
