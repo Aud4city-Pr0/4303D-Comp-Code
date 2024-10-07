@@ -11,5 +11,9 @@ extern Drive chassis;
 void NormalRedAuto();
 // The function def for other red auto
 void OtherRedAuto();
+// The function def for normal blue auto
+void NormalBlueAuto();
+// The function def for other blue auto
+void OtherBlueAuto();
 
 void default_constants();

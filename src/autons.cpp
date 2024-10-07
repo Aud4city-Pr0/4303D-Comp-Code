@@ -34,14 +34,123 @@ void default_constants() {
 // Make your own autonomous functions here!
 // . . .
 
+// Mech enums
+// This is where you will find enums for our mechs
+
+// The pistion exstention status enum
+enum PistionStatus {
+  RETRACT = 0,
+  EXTEND = 1
+};
+
+// The intake on/off status enum
+enum IntakeStatus {
+  INTAKE_OFF = 0,
+  INTAKE_ON = 1 
+};
+
+
+// Auton bot mech functions
+// This section will be for our autons bot mech fucntions
+// You will find functions for our Mogo, Intake and other parts of our bot that will be used in auto
+
+// The mogo function
+void set_mogo_status(PistionStatus Status) {
+  if(Status == PistionStatus::EXTEND) {
+    // extend the mogo
+  } else if(Status == PistionStatus::RETRACT) {
+    // retract the mogo
+  }
+}
+
+// The intake function
+void set_intake_status(IntakeStatus Status) {
+  if(Status == IntakeStatus::INTAKE_ON) {
+    // turn on the intake
+  } else if(Status == IntakeStatus::INTAKE_OFF) {
+    // turn the intake off
+  }
+}
+
+
 // The Comp Autos
 // Autonomus functions that are under the "Comp Autos" section will be used in auton.
 // This will mainly contain our red and blue autos, the skills auto will be under another section.
 
 void NormalRedAuto() {
   // This will contain our normal red auto
+  chassis.pid_drive_set(48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // mogo clamp down
+  set_mogo_status(PistionStatus::EXTEND);
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED);
+  // intake moves the ring onto the goal
+  set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_wait();
+  // mogo realeases the goal
+  set_intake_status(IntakeStatus::INTAKE_OFF);
+  set_mogo_status(PistionStatus::RETRACT);
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // the end of our normal auto
+
 }
 
+// The other red
 void OtherRedAuto() {
   // This will contain our other red auto
+  chassis.pid_drive_set(48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // mogo clamps down
+  set_mogo_status(PistionStatus::EXTEND);
+  // intake turns on
+  set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // intake turns off
+  set_intake_status(IntakeStatus::INTAKE_OFF);
+  // rectract mogo pistion
+  set_mogo_status(PistionStatus::RETRACT);
+  // end of auto
+
+}
+
+// the normal blue auto
+void NormalBlueAuto() {
+  // This will contain our normal blue auto (PLEASE NOTE! This auton will change, this is not the final version.)
+  chassis.pid_drive_set(48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // mogo clamp down
+  set_mogo_status(PistionStatus::EXTEND);
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED);
+  // intake moves the ring onto the goal
+  set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_wait();
+  // mogo realeases the goal
+  set_intake_status(IntakeStatus::INTAKE_OFF);
+  set_mogo_status(PistionStatus::RETRACT);
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // the end of our normal auto
+}
+
+void OtherBlueAuto() {
+  // This will contain our normal blue auto (PLEASE NOTE! This auton will change, this is not the final version.)
+  chassis.pid_drive_set(48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // mogo clamps down
+  set_mogo_status(PistionStatus::EXTEND);
+  // intake turns on
+  set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // intake turns off
+  set_intake_status(IntakeStatus::INTAKE_OFF);
+  // rectract mogo pistion
+  set_mogo_status(PistionStatus::RETRACT);
+  // end of auto
 }

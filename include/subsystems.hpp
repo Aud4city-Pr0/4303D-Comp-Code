@@ -1,8 +1,10 @@
 #pragma once
-
 #include "api.h"
+#include "pros/adi.hpp"
+#include "pros/motors.hpp"
 
 // Your motors, sensors, etc. should go here.  Below are examples
 
-// inline pros::Motor intake(1);
-// inline pros::adi::DigitalIn limit_switch('A');
+// Our bot systems and mechs
+inline pros::Motor IntakeMotor(11);
+inline pros::adi::Pneumatics MogoMech('a', false);
