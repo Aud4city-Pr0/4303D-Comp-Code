@@ -1,3 +1,4 @@
+#include "autons.hpp"
 #include "main.h"
 
 /////
@@ -37,7 +38,7 @@ void default_constants() {
 // Mech enums
 // This is where you will find enums for our mechs
 
-// The pistion exstention staus enum
+// The pistion exstention status enum
 enum PistionStatus {
   RETRACT = 0,
   EXTEND = 1
@@ -77,7 +78,7 @@ void set_intake_status(IntakeStatus Status) {
 // Autonomus functions that are under the "Comp Autos" section will be used in auton.
 // This will mainly contain our red and blue autos, the skills auto will be under another section.
 
-void NormalRedAuto() {
+void RightRedAuto() {
   // This will contain our normal red auto
   chassis.pid_drive_set(48_in, DRIVE_SPEED);
   chassis.pid_wait();
@@ -99,7 +100,7 @@ void NormalRedAuto() {
 }
 
 // The other red
-void OtherRedAuto() {
+void LeftRedAuto() {
   // This will contain our other red auto
   chassis.pid_drive_set(48_in, DRIVE_SPEED);
   chassis.pid_wait();
@@ -118,7 +119,7 @@ void OtherRedAuto() {
 }
 
 // the normal blue auto
-void NormalBlueAuto() {
+void RightBlueAuto() {
   // This will contain our normal blue auto (PLEASE NOTE! This auton will change, this is not the final version.)
   chassis.pid_drive_set(48_in, DRIVE_SPEED);
   chassis.pid_wait();
@@ -138,7 +139,7 @@ void NormalBlueAuto() {
   // the end of our normal auto
 }
 
-void OtherBlueAuto() {
+void LeftBlueAuto() {
   // This will contain our normal blue auto (PLEASE NOTE! This auton will change, this is not the final version.)
   chassis.pid_drive_set(48_in, DRIVE_SPEED);
   chassis.pid_wait();
@@ -153,4 +154,11 @@ void OtherBlueAuto() {
   // rectract mogo pistion
   set_mogo_status(PistionStatus::RETRACT);
   // end of auto
+}
+
+// The Skills Auto Section
+// This is the section that will contain our skills auto for our bot.
+
+void MainSkillsAuto() {
+  // This is the function that will contain skills auto
 }
