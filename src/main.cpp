@@ -1,15 +1,12 @@
 #include "main.h"
+#include "EZ-Template/auton.hpp"
+#include "autons.hpp"
+#include "subsystems.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
 // https://ez-robotics.github.io/EZ-Template/
 /////
-
-// Our varibales for controling the robot
-// This is where you will see the boolean vars for our bot
-
-// This varabile controlls the exstention of our mogo mech
-bool IsExteneded = false;
 
 // Chassis constructor
 ez::Drive chassis(
@@ -48,8 +45,10 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       // Our team autos (including skills)
-      Auton("Normal Red Auto. \n Our team's normal red side auto", NormalRedAuto),
-      Auton("Other Red Auto. \n Our team's other red side auto", OtherRedAuto)
+      Auton("Normal Red Auto. \n Our team's normal red side auto.", RightRedAuto),
+      Auton("Other Red Auto. \n Our team's other red side auto.", LeftRedAuto),
+      Auton("Normal Blue Auto. \n Our team's normal blue side auto.", RightBlueAuto),
+      Auton("Other Blue Auto. \n Our team's other blue side auto.", LeftBlueAuto)
   });
 
   // Initialize chassis and auton selector
@@ -148,12 +147,8 @@ void opcontrol() {
     // The driver controlls section
     // In this section, you will find the button controlls for our mechs (Intake, Mog, Etc.)
 
-    if(master.get_digital(DIGITAL_A) && IsExteneded == false) {
-      // this will extend the mogo
-      IsExteneded = true;
-    } else if(master.get_digital(DIGITAL_A) && IsExteneded == true) {
-      // this will retract the mogo
-      IsExteneded = false;
+    if(master.get_digital(DIGITAL_A)) {
+      //MogoMech.toggle();
     }
 
     if (master.get_digital(DIGITAL_R1)) {
@@ -163,7 +158,7 @@ void opcontrol() {
       //intake.move(-127);
     } 
     else {
-      //intake.move(0);
+      //intake.brake();
     }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
