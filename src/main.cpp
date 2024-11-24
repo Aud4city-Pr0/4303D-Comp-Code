@@ -1,7 +1,4 @@
 #include "main.h"
-#include "EZ-Template/auton.hpp"
-#include "autons.hpp"
-#include "subsystems.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -11,10 +8,10 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {2, 3, 4},     // Left Chassis Ports (negative port will reverse it!)
-    {-12, -13, -14},  // Right Chassis Ports (negative port will reverse it!)
+    {1, 2, 3},     // Left Chassis Ports (negative port will reverse it!)
+    {-4, -5, -6},  // Right Chassis Ports (negative port will reverse it!)
 
-    8,      // IMU Port
+    7,      // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM
 
@@ -45,10 +42,8 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       // Our team autos (including skills)
-      Auton("Normal Red Auto. \n Our team's normal red side auto.", RightRedAuto),
-      Auton("Other Red Auto. \n Our team's other red side auto.", LeftRedAuto),
-      Auton("Normal Blue Auto. \n Our team's normal blue side auto.", RightBlueAuto),
-      Auton("Other Blue Auto. \n Our team's other blue side auto.", LeftBlueAuto)
+      Auton("Normal Red Auto. \n Our team's normal red side auto", NormalRedAuto),
+      Auton("Other Red Auto. \n Our team's other red side auto", OtherRedAuto)
   });
 
   // Initialize chassis and auton selector
@@ -126,10 +121,10 @@ void opcontrol() {
       //  When enabled:
       //  * use A and Y to increment / decrement the constants
       //  * use the arrow keys to navigate the constants
-      if (master.get_digital_new_press(DIGITAL_X)) {
+      if (master.get_digital_new_press(DIGITAL_X))
         chassis.pid_tuner_toggle();
 
-      } // Trigger the selected autonomous routine
+      // Trigger the selected autonomous routine
       if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)) {
         autonomous();
         chassis.drive_brake_set(driver_preference_brake);
@@ -138,28 +133,14 @@ void opcontrol() {
       chassis.pid_tuner_iterate();  // Allow PID Tuner to iterate
     }
 
-
     chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
+    // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
+    // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
+
     // . . .
     // Put more user control code here!
     // . . .
-
-    // The driver controlls section
-    // In this section, you will find the button controlls for our mechs (Intake, Mog, Etc.)
-
-    if(master.get_digital(DIGITAL_A)) {
-      //MogoMech.toggle();
-    }
-
-    if (master.get_digital(DIGITAL_R1)) {
-      //intake.move(127);
-    } 
-    else if (master.get_digital(DIGITAL_L2)) {
-      //intake.move(-127);
-    } 
-    else {
-      //intake.brake();
-    }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }

@@ -8,14 +8,8 @@ extern Drive chassis;
 // DO NOT REMOVE OR CODE WON'T WORK!!!!!
 
 // The function def for normal red auto
-void RightRedAuto();
+void NormalRedAuto();
 // The function def for other red auto
-void LeftRedAuto();
-// The function def for normal blue auto
-void RightBlueAuto();
-// The function def for other blue auto
-void LeftBlueAuto();
-// The function def for the main skills auto
-void MainSkillsAuto();
+void OtherRedAuto();
 
 void default_constants();
