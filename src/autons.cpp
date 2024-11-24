@@ -1,3 +1,4 @@
+#include "autons.hpp"
 #include "main.h"
 
 /////
@@ -34,14 +35,160 @@ void default_constants() {
 // Make your own autonomous functions here!
 // . . .
 
+// Mech enums
+// This is where you will find enums for our mechs
+
+// The pistion exstention status enum
+enum PistionStatus {
+  RETRACT = 0,
+  EXTEND = 1
+};
+
+// The intake on/off status enum
+enum IntakeStatus {
+  INTAKE_OFF = 0,
+  INTAKE_ON = 1 
+};
+
+
+// Auton bot mech functions
+// This section will be for our autons bot mech fucntions
+// You will find functions for our Mogo, Intake and other parts of our bot that will be used in auto
+
+// The mogo function
+void set_mogo_status(PistionStatus Status) {
+  if(Status == PistionStatus::EXTEND) {
+    // extend the mogo
+    MogoMech.set(true);
+  } else if(Status == PistionStatus::RETRACT) {
+    // retract the mogo
+    MogoMech.set(false);
+  }
+}
+
+// The intake function
+void set_intake_status(IntakeStatus Status) {
+  if(Status == IntakeStatus::INTAKE_ON) {
+    // turn on the intake
+    IntakeMotorA.move_voltage(-12000);
+    IntakeMotorB.move_voltage(12000);
+  } else if(Status == IntakeStatus::INTAKE_OFF) {
+    // turn the intake off
+    IntakeMotorA.brake();
+    IntakeMotorB.brake();
+  }
+}
+
+
 // The Comp Autos
 // Autonomus functions that are under the "Comp Autos" section will be used in auton.
 // This will mainly contain our red and blue autos, the skills auto will be under another section.
 
-void NormalRedAuto() {
+void RightRedAuto() {
   // This will contain our normal red auto
+  chassis.pid_drive_set(24_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // mogo clamp down
+  //set_mogo_status(PistionStatus::EXTEND);
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED);
+  // intake moves the ring onto the goal
+  //set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_wait();
+  // mogo realeases the goal
+  //set_intake_status(IntakeStatus::INTAKE_OFF);
+  //set_mogo_status(PistionStatus::RETRACT);
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(24_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // the end of our normal auto
+
 }
 
-void OtherRedAuto() {
+// The other red
+void LeftRedAuto() {
   // This will contain our other red auto
+  chassis.pid_drive_set(48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // mogo clamps down
+  //set_mogo_status(PistionStatus::EXTEND);
+  // intake turns on
+  //set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // intake turns off
+  //set_intake_status(IntakeStatus::INTAKE_OFF);
+  // rectract mogo pistion
+  //set_mogo_status(PistionStatus::RETRACT);
+  // end of auto
+
+}
+
+// the normal blue auto
+void RightBlueAuto() {
+  // This will contain our normal blue auto (PLEASE NOTE! This auton will change, this is not the final version.)
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // mogo clamp down
+  //set_mogo_status(PistionStatus::EXTEND);
+  chassis.pid_drive_set(48_in, DRIVE_SPEED);
+  // intake moves the ring onto the goal
+  //set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_wait();
+  // mogo realeases the goal
+  //set_intake_status(IntakeStatus::INTAKE_OFF);
+  //set_mogo_status(PistionStatus::RETRACT);
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // the end of our normal auto
+}
+
+void LeftBlueAuto() {
+  // This will contain our normal blue auto (PLEASE NOTE! This auton will change, this is not the final version.)
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // mogo clamps down
+  //set_mogo_status(PistionStatus::EXTEND);
+  // intake turns on
+  //set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_drive_set(48_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  // intake turns off
+  //set_intake_status(IntakeStatus::INTAKE_OFF);
+  // rectract mogo pistion
+  //set_mogo_status(PistionStatus::RETRACT);
+  // end of auto
+}
+
+// The Skills Auto Section
+// This is the section that will contain our skills auto for our bot.
+
+void MainSkillsAuto() {
+  // This is the function that will contain skills auto
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED);
+  // mogo activates
+  //set_mogo_status(PistionStatus::EXTEND);
+  // turn on intake
+  //set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_drive_set(24_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  //set_intake_status(IntakeStatus::INTAKE_OFF);
+  //set_mogo_status(PistionStatus::RETRACT);
+  chassis.pid_drive_set(6_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(36_in, DRIVE_SPEED);
+  // intake one ring 
+  //set_intake_status(IntakeStatus::INTAKE_ON);
+  chassis.pid_wait();
+  chassis.pid_drive_set(24_in, DRIVE_SPEED);
+  //set_intake_status(IntakeStatus::INTAKE_OFF);
+  chassis.pid_wait();
 }
