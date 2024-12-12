@@ -9,5 +9,5 @@
 inline ez::Piston MogoMech('A', false);
 inline pros::Motor LadyBrownMech(15, pros::v5::MotorGears::green);
 // intake motor
-inline pros::Motor IntakeMotor(16, pros::v5::MotorGear::blue);
+inline pros::Motor IntakeMotor(16, pros::v5::MotorGears::blue);
 
