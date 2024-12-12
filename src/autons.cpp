@@ -70,7 +70,7 @@ void set_mogo_status(PistionStatus Status) {
 void set_intake_status(IntakeStatus Status) {
   if(Status == IntakeStatus::INTAKE_ON) {
     // turn on the intake
-    IntakeMotor.move_voltage(-12000);
+    IntakeMotor.move_voltage(12000);
   } else if(Status == IntakeStatus::INTAKE_OFF) {
     // turn the intake off
     IntakeMotor.brake();
