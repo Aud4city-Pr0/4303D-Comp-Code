@@ -35,8 +35,8 @@
             "-funwind-tables",
             "--std=gnu++20",
             "-o",
-            "bin/main.cpp.o",
-            "src\\main.cpp"
+            "bin/autons.cpp.o",
+            "src\\autons.cpp"
         ],
         "directory": "C:\\Users\\zacha\\OneDrive\\Documents\\VEX Programing Projects HS\\VEX 2024-2025 High Stakes Code\\4303D-Comp-Code",
         "file": "src\\main.cpp"
