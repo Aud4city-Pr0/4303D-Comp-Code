@@ -1,15 +1,25 @@
 #include "main.h"
+#include "EZ-Template/auton.hpp"
+#include "EZ-Template/sdcard.hpp"
+#include "EZ-Template/util.hpp"
+#include "autons.hpp"
+#include "pros/misc.h"
+#include "subsystems.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
 // https://ez-robotics.github.io/EZ-Template/
 /////
 
+// Mech Macro values
+int LBpos = 1;
+
+
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {1, 2, 3},     // Left Chassis Ports (negative port will reverse it!)
-    {-4, -5, -6},  // Right Chassis Ports (negative port will reverse it!)
+    {-5, -1, -4},     // Left Chassis Ports (negative port will reverse it!)
+    {16, 17, 15},  // Right Chassis Ports (negative port will reverse it!)
 
     7,      // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -27,6 +37,8 @@ void initialize() {
 
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
 
+  // setting up lady brown
+  LadyBrownMech.set_zero_position(0);
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);  // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0);    // Sets the active brake kP. We recommend ~2.  0 will disable.
@@ -42,8 +54,10 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       // Our team autos (including skills)
-      Auton("Normal Red Auto. \n Our team's normal red side auto", NormalRedAuto),
-      Auton("Other Red Auto. \n Our team's other red side auto", OtherRedAuto)
+      Auton("Normal Red Auto. \n Our team's normal red side auto.", RightRedAuto),
+      Auton("Other Red Auto. \n Our team's other red side auto.", LeftRedAuto),
+      Auton("Normal Blue Auto. \n Our team's normal blue side auto.", RightBlueAuto),
+      Auton("Other Blue Auto. \n Our team's other blue side auto.", LeftBlueAuto)
   });
 
   // Initialize chassis and auton selector
@@ -121,10 +135,10 @@ void opcontrol() {
       //  When enabled:
       //  * use A and Y to increment / decrement the constants
       //  * use the arrow keys to navigate the constants
-      if (master.get_digital_new_press(DIGITAL_X))
+      if (master.get_digital_new_press(DIGITAL_X)) {
         chassis.pid_tuner_toggle();
 
-      // Trigger the selected autonomous routine
+      } // Trigger the selected autonomous routine
       if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)) {
         autonomous();
         chassis.drive_brake_set(driver_preference_brake);
@@ -133,14 +147,38 @@ void opcontrol() {
       chassis.pid_tuner_iterate();  // Allow PID Tuner to iterate
     }
 
-    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
-    // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
-    // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
-    // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
 
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // . . .
     // Put more user control code here!
     // . . .
+
+    // The driver controlls section
+    // In this section, you will find the button controlls for our mechs (Intake, Mog, Etc.)
+
+    MogoMech.button_toggle(master.get_digital(DIGITAL_A));
+
+    if (master.get_digital(DIGITAL_R1)) {
+      IntakeMotor.move_voltage(-12000);
+    } 
+    else if (master.get_digital(DIGITAL_L2)) {
+      IntakeMotor.move_voltage(12000);
+    } 
+    else {
+      IntakeMotor.brake();
+    }
+
+    // The Lady Brown code
+    if(master.get_digital(DIGITAL_DOWN) && LBpos == 1) {
+      LadyBrownMech.move_absolute(-1900, 100);
+      LBpos = 2;
+    } else if(master.get_digital(DIGITAL_UP) && LBpos == 2) {
+      LadyBrownMech.move_absolute(-320, 100);
+      LBpos = 3;
+    } else if (master.get_digital(DIGITAL_X) && LBpos == 3) {
+      LadyBrownMech.move_absolute(0, 100);
+      LBpos = 1;
+    }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
