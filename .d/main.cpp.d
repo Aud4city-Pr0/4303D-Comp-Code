@@ -138,7 +138,8 @@ bin/main.cpp.o: src/main.cpp include/main.h include/api.h \
  include/EZ-Template/PID.hpp include/EZ-Template/slew.hpp \
  include/EZ-Template/tracking_wheel.hpp include/pros/adi.hpp \
  include/pros/rotation.hpp include/pros/motor_group.hpp \
- include/EZ-Template/piston.hpp include/subsystems.hpp
+ include/EZ-Template/piston.hpp include/subsystems.hpp \
+ include/ladybrownglobals.hpp
 include/main.h:
 include/api.h:
 include/pros/adi.h:
@@ -372,3 +373,4 @@ include/pros/rotation.hpp:
 include/pros/motor_group.hpp:
 include/EZ-Template/piston.hpp:
 include/subsystems.hpp:
+include/ladybrownglobals.hpp:

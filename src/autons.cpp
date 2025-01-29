@@ -1,7 +1,9 @@
 #include "autons.hpp"
+#include "EZ-Template/piston.hpp"
 #include "main.h"
 #include "pros/rtos.hpp"
 #include "subsystems.hpp"
+#include "ladybrownglobals.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -54,8 +56,9 @@ enum IntakeStatus {
 
 // The lady brown status enum
 enum LadyBrownStatus {
-  BROWN_LOWER = 0,
-  BROWN_RAISE = 1
+  BROWN_IDLE = 0,
+  BROWN_LOAD = 1,
+  BROWN_SCORE = 2
 };
 
 
@@ -65,22 +68,24 @@ enum LadyBrownStatus {
 
 // the lady brown function
 void set_lady_brown_status(LadyBrownStatus Status) {
-  if(Status == LadyBrownStatus::BROWN_RAISE) {
-    LadyBrownMech.move_absolute(180, 100);
-  } else if(Status == LadyBrownStatus::BROWN_RAISE) {
-    LadyBrownMech.move_absolute(-90, 100);
-    LadyBrownMech.tare_position();
+  if(Status == LadyBrownStatus::BROWN_SCORE) {
+    nextLBState();
+  } else if(Status == LadyBrownStatus::BROWN_IDLE) {
+    nextLBState();
+  } else if(Status == LadyBrownStatus::BROWN_SCORE) {
+    nextLBState();
   }
+
 }
 
-// The mogo function
-void set_mogo_status(PistionStatus Status) {
+// The pistion controll function
+void set_pistion_status(ez::Piston pistionToExtend, PistionStatus Status) {
   if(Status == PistionStatus::EXTEND) {
-    // extend the mogo
-    MogoMech.set(true);
+    // extend the mogo or doinker
+    pistionToExtend.set(true);
   } else if(Status == PistionStatus::RETRACT) {
-    // retract the mogo
-    MogoMech.set(false);
+    // retract the mogo or doinker
+    pistionToExtend.set(false);
   }
 }
 
@@ -101,12 +106,13 @@ void set_intake_status(IntakeStatus Status) {
 // This will mainly contain our red and blue autos, the skills auto will be under another section.
 
 void RightRedAuto() {
+  set_pistion_status(MogoMech, PistionStatus::EXTEND);
   // This will contain our normal red auto
-  chassis.pid_drive_set(-29_in, 75);
+  chassis.pid_drive_set(-34_in, 75);
   chassis.pid_wait();
   // mogo clamp down
+  set_pistion_status(MogoMech, PistionStatus::RETRACT);
   pros::delay(1000);
-  set_mogo_status(PistionStatus::EXTEND);
   // intake moves the ring onto the goal
   set_intake_status(IntakeStatus::INTAKE_ON);
   pros::delay(1000);
@@ -115,11 +121,12 @@ void RightRedAuto() {
   chassis.pid_wait();
   // mogo realeases the goal
   set_intake_status(IntakeStatus::INTAKE_OFF);
-  set_mogo_status(PistionStatus::RETRACT);
+  set_pistion_status(MogoMech, PistionStatus::EXTEND);
   chassis.pid_turn_set(180_deg, TURN_SPEED);
   chassis.pid_wait();
-  chassis.pid_drive_set(24_in, DRIVE_SPEED);
+  chassis.pid_drive_set(36_in, DRIVE_SPEED);
   chassis.pid_wait();
+  set_lady_brown_status(LadyBrownStatus::BROWN_SCORE);
   // the end of our normal auto
 
 }
@@ -127,31 +134,36 @@ void RightRedAuto() {
 // The other red
 void LeftRedAuto() {
   // This will contain our other red auto
-  chassis.pid_drive_set(-27_in, 75);
+  set_pistion_status(MogoMech, PistionStatus::EXTEND);
+  chassis.pid_drive_set(-34_in, 75);
+  chassis.pid_speed_max_set(DRIVE_SPEED);
   chassis.pid_wait();
-  // mogo clamps down
-  set_mogo_status(PistionStatus::EXTEND);
+  // mogo clamp down
+  set_pistion_status(MogoMech, PistionStatus::RETRACT);
+  pros::delay(1000);
   // intake turns on
   set_intake_status(IntakeStatus::INTAKE_ON);
+  pros::delay(1000);
   chassis.pid_drive_set(24_in, 75);
   chassis.pid_speed_max_set(DRIVE_SPEED);
   chassis.pid_wait();
   // intake turns off
   set_intake_status(IntakeStatus::INTAKE_OFF);
   // rectract mogo pistion
-  set_mogo_status(PistionStatus::RETRACT);
+  set_pistion_status(MogoMech, PistionStatus::RETRACT);
   // end of auto
 
 }
 
 // the normal blue auto
 void RightBlueAuto() {
-  // This will contain our normal blue auto.
-  chassis.pid_drive_set(-27_in, 75);
+  set_pistion_status(MogoMech, PistionStatus::EXTEND);
+  // This will contain our normal red auto
+  chassis.pid_drive_set(-34_in, 75);
   chassis.pid_wait();
   // mogo clamp down
+  set_pistion_status(MogoMech, PistionStatus::RETRACT);
   pros::delay(1000);
-  set_mogo_status(PistionStatus::EXTEND);
   // intake moves the ring onto the goal
   set_intake_status(IntakeStatus::INTAKE_ON);
   pros::delay(1000);
@@ -160,30 +172,33 @@ void RightBlueAuto() {
   chassis.pid_wait();
   // mogo realeases the goal
   set_intake_status(IntakeStatus::INTAKE_OFF);
-  set_mogo_status(PistionStatus::RETRACT);
+  set_pistion_status(MogoMech, PistionStatus::EXTEND);
   chassis.pid_turn_set(180_deg, TURN_SPEED);
   chassis.pid_wait();
-  chassis.pid_drive_set(24_in, DRIVE_SPEED);
+  chassis.pid_drive_set(36_in, DRIVE_SPEED);
   chassis.pid_wait();
+  set_lady_brown_status(LadyBrownStatus::BROWN_SCORE);
   // the end of our normal auto
 }
 
 void LeftBlueAuto() {
+  set_pistion_status(MogoMech, PistionStatus::EXTEND);
   // This will contain our normal blue auto
-  chassis.pid_drive_set(-27_in, 75);
+  chassis.pid_drive_set(-34_in, 75);
   chassis.pid_wait();
-  // mogo clamps down
-  set_mogo_status(PistionStatus::EXTEND);
+  // mogo clamp down
+  set_pistion_status(MogoMech, PistionStatus::RETRACT);
+  pros::delay(1000);
   // intake turns on
   set_intake_status(IntakeStatus::INTAKE_ON);
+  pros::delay(1000);
   chassis.pid_drive_set(24_in, 75);
   chassis.pid_speed_max_set(DRIVE_SPEED);
   chassis.pid_wait();
   // intake turns off
   set_intake_status(IntakeStatus::INTAKE_OFF);
   // rectract mogo pistion
-  set_mogo_status(PistionStatus::RETRACT);
-  // end of auto
+  set_pistion_status(MogoMech, PistionStatus::RETRACT);
   // end of auto
 }
 
@@ -196,14 +211,14 @@ void MainSkillsAuto() {
   chassis.pid_wait();
   chassis.pid_drive_set(-24_in, DRIVE_SPEED);
   // mogo activates
-  //set_mogo_status(PistionStatus::EXTEND);
+  //set_pistion_status(PistionStatus::EXTEND);
   // turn on intake
   //set_intake_status(IntakeStatus::INTAKE_ON);
   chassis.pid_wait();
   chassis.pid_drive_set(24_in, DRIVE_SPEED);
   chassis.pid_wait();
   //set_intake_status(IntakeStatus::INTAKE_OFF);
-  //set_mogo_status(PistionStatus::RETRACT);
+  //set_pistion_status(PistionStatus::RETRACT);
   chassis.pid_drive_set(6_in, DRIVE_SPEED);
   chassis.pid_wait();
   chassis.pid_turn_set(180_deg, TURN_SPEED);

@@ -4,22 +4,21 @@
 #include "EZ-Template/util.hpp"
 #include "autons.hpp"
 #include "pros/misc.h"
+#include "pros/rtos.hpp"
 #include "subsystems.hpp"
+#include "ladybrownglobals.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
 // https://ez-robotics.github.io/EZ-Template/
+
 /////
-
-// Mech Macro values
-int LBpos = 1;
-
 
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
     {-5, -1, -4},     // Left Chassis Ports (negative port will reverse it!)
-    {16, 17, 15},  // Right Chassis Ports (negative port will reverse it!)
+    {17, 10, 13},  // Right Chassis Ports (negative port will reverse it!)
 
     7,      // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -38,7 +37,15 @@ void initialize() {
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
 
   // setting up lady brown
-  LadyBrownMech.set_zero_position(0);
+  LBRotationSensor.reset_position();
+  LBRotationSensor.reset();
+  pros::Task LBControlTask([]{
+    while(true) {
+      LBControl();
+      pros::delay(20);
+    }
+  });
+
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);  // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0);    // Sets the active brake kP. We recommend ~2.  0 will disable.
@@ -157,29 +164,24 @@ void opcontrol() {
     // In this section, you will find the button controlls for our mechs (Intake, Mog, Etc.)
 
     MogoMech.button_toggle(master.get_digital(DIGITAL_A));
+    DoinkerMech.button_toggle(master.get_digital(DIGITAL_B));
 
     if (master.get_digital(DIGITAL_R1)) {
-      IntakeMotor.move_voltage(-12000);
+      IntakeMotor.move_velocity(-600);
     } 
-    else if (master.get_digital(DIGITAL_L2)) {
-      IntakeMotor.move_voltage(12000);
+    else if (master.get_digital(DIGITAL_L1)) {
+      IntakeMotor.move_velocity(600);
     } 
     else {
       IntakeMotor.brake();
     }
 
     // The Lady Brown code
-    if(master.get_digital(DIGITAL_DOWN) && LBpos == 1) {
-      LadyBrownMech.move_absolute(-1900, 100);
-      LBpos = 2;
-    } else if(master.get_digital(DIGITAL_UP) && LBpos == 2) {
-      LadyBrownMech.move_absolute(-320, 100);
-      LBpos = 3;
-    } else if (master.get_digital(DIGITAL_X) && LBpos == 3) {
-      LadyBrownMech.move_absolute(0, 100);
-      LBpos = 1;
-    }
+    if(master.get_digital(DIGITAL_L2)) {
+      nextLBState();
+      
 
+    }  
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }

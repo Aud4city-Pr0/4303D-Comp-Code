@@ -3,6 +3,7 @@
 #include "EZ-Template/drive/drive.hpp"
 #include "EZ-Template/piston.hpp"
 #include "pros/motors.hpp"
+#include "pros/rotation.hpp"
 #include "subsystems.hpp"
 
 extern Drive chassis;
@@ -10,6 +11,7 @@ extern ez::Piston MogoMech;
 extern ez::Piston DoinkerMech;
 extern pros::Motor IntakeMotor;
 extern pros::Motor LadyBrownMech;
+extern pros::Rotation LBRotationSensor;
 
 // The function defs for the autons in autons.cpp
 // DO NOT REMOVE OR CODE WON'T WORK!!!!!

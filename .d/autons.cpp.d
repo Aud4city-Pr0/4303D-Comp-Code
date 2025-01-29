@@ -136,7 +136,8 @@ bin/autons.cpp.o: src/autons.cpp include/autons.hpp \
  include/EZ-Template/slew.hpp include/EZ-Template/tracking_wheel.hpp \
  include/pros/adi.hpp include/pros/rotation.hpp \
  include/pros/motor_group.hpp include/EZ-Template/piston.hpp \
- include/subsystems.hpp include/api.h include/main.h
+ include/subsystems.hpp include/api.h include/main.h \
+ include/ladybrownglobals.hpp
 include/autons.hpp:
 include/EZ-Template/drive/drive.hpp:
 include/EZ-Template/PID.hpp:
@@ -367,3 +368,4 @@ include/EZ-Template/piston.hpp:
 include/subsystems.hpp:
 include/api.h:
 include/main.h:
+include/ladybrownglobals.hpp:
