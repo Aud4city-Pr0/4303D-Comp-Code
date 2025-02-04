@@ -2,7 +2,6 @@
 #include "EZ-Template/piston.hpp"
 #include "api.h"
 #include "pros/motors.hpp"
-#include "pros/rotation.hpp"
 
 // Your motors, sensors, etc. should go here.  Below are examples
 
@@ -12,5 +11,3 @@ inline ez::Piston DoinkerMech('B', false);
 inline pros::Motor LadyBrownMech(11, pros::v5::MotorGears::red);
 // intake motor
 inline pros::Motor IntakeMotor(19, pros::v5::MotorGear::blue);
-// bot sensors
-inline pros::Rotation LBRotationSensor(-8);

@@ -69,11 +69,11 @@ enum LadyBrownStatus {
 // the lady brown function
 void set_lady_brown_status(LadyBrownStatus Status) {
   if(Status == LadyBrownStatus::BROWN_SCORE) {
-    nextLBState();
+    setLBState(2);
   } else if(Status == LadyBrownStatus::BROWN_IDLE) {
-    nextLBState();
-  } else if(Status == LadyBrownStatus::BROWN_SCORE) {
-    nextLBState();
+    setLBState(0);
+  } else if(Status == LadyBrownStatus::BROWN_LOAD) {
+    setLBState(1);
   }
 
 }
@@ -207,29 +207,33 @@ void LeftBlueAuto() {
 
 void MainSkillsAuto() {
   // This is the function that will contain skills auto
-  chassis.pid_turn_set(45_deg, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-24_in, DRIVE_SPEED);
-  // mogo activates
-  //set_pistion_status(PistionStatus::EXTEND);
-  // turn on intake
-  //set_intake_status(IntakeStatus::INTAKE_ON);
-  chassis.pid_wait();
-  chassis.pid_drive_set(24_in, DRIVE_SPEED);
-  chassis.pid_wait();
-  //set_intake_status(IntakeStatus::INTAKE_OFF);
-  //set_pistion_status(PistionStatus::RETRACT);
-  chassis.pid_drive_set(6_in, DRIVE_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_set(-90_deg, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(36_in, DRIVE_SPEED);
-  // intake one ring 
-  //set_intake_status(IntakeStatus::INTAKE_ON);
-  chassis.pid_wait();
-  chassis.pid_drive_set(24_in, DRIVE_SPEED);
-  //set_intake_status(IntakeStatus::INTAKE_OFF);
-  chassis.pid_wait();
+ set_pistion_status(MogoMech, PistionStatus::EXTEND);
+ // drive to goal
+ chassis.pid_drive_set(-7_in, 55);
+ chassis.pid_wait();
+ // clamp down mogo
+ pros::delay(1000);
+ set_pistion_status(MogoMech, PistionStatus::RETRACT);
+ // intake
+ set_intake_status(IntakeStatus::INTAKE_ON);
+ pros::delay(1000);
+ chassis.pid_turn_set(-180_deg, TURN_SPEED);
+ chassis.pid_wait();
+ chassis.pid_drive_set(25_in, 55);
+ chassis.pid_wait();
+ chassis.pid_turn_set(90_deg, TURN_SPEED);
+ chassis.pid_wait();
+ chassis.pid_drive_set(25_in, 55);
+ chassis.pid_wait();
+ chassis.pid_turn_set(99_deg, TURN_SPEED);
+ chassis.pid_wait();
+ chassis.pid_drive_set(34_in, 55);
+ chassis.pid_speed_max_set(DRIVE_SPEED);
+ chassis.pid_wait();
+ chassis.pid_turn_set(-95_deg, TURN_SPEED);
+ set_intake_status(IntakeStatus::INTAKE_OFF);
+ chassis.pid_wait();
+ chassis.pid_drive_set(-10_in, DRIVE_SPEED);
+ set_pistion_status(MogoMech, PistionStatus::EXTEND);
+ chassis.pid_wait();
 }

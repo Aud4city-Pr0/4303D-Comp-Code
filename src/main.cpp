@@ -37,12 +37,11 @@ void initialize() {
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
 
   // setting up lady brown
-  LBRotationSensor.reset_position();
-  LBRotationSensor.reset();
+  LadyBrownMech.set_zero_position(0);
   pros::Task LBControlTask([]{
     while(true) {
       LBControl();
-      pros::delay(20);
+      pros::delay(10);
     }
   });
 
@@ -64,7 +63,8 @@ void initialize() {
       Auton("Normal Red Auto. \n Our team's normal red side auto.", RightRedAuto),
       Auton("Other Red Auto. \n Our team's other red side auto.", LeftRedAuto),
       Auton("Normal Blue Auto. \n Our team's normal blue side auto.", RightBlueAuto),
-      Auton("Other Blue Auto. \n Our team's other blue side auto.", LeftBlueAuto)
+      Auton("Other Blue Auto. \n Our team's other blue side auto.", LeftBlueAuto),
+      Auton("Skills Auto. \n this is our skills auto.", MainSkillsAuto)
   });
 
   // Initialize chassis and auton selector
@@ -178,10 +178,12 @@ void opcontrol() {
 
     // The Lady Brown code
     if(master.get_digital(DIGITAL_L2)) {
-      nextLBState();
-      
-
-    }  
+      setLBState(1);
+    } else if (master.get_digital(DIGITAL_R2)) {
+      setLBState(2);
+    } else if (master.get_digital(DIGITAL_X)) {
+      setLBState(0);
+    }
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }
