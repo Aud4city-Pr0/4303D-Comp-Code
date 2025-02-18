@@ -60,11 +60,11 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       // Our team autos (including skills)
-      Auton("Normal Red Auto. \n Our team's normal red side auto.", RightRedAuto),
-      Auton("Other Red Auto. \n Our team's other red side auto.", LeftRedAuto),
-      Auton("Normal Blue Auto. \n Our team's normal blue side auto.", RightBlueAuto),
-      Auton("Other Blue Auto. \n Our team's other blue side auto.", LeftBlueAuto),
-      Auton("Skills Auto. \n this is our skills auto.", MainSkillsAuto)
+      Auton("Two Ring With Tower Touch (RIGHT) \t Gets two rings on goal and ends with lb touching tower.", RightRedAuto),
+      Auton("One Ring On Mogo (RIGHT) \t Puts on ring on a mogo.", LeftRedAuto),
+      Auton("Two Ring With Tower Touch (LEFT) \t Gets two rings on goal and ends with lb touching tower.", RightBlueAuto),
+      Auton("One Ring On Mogo (LEFT) \t Puts on ring on a mogo.", LeftBlueAuto),
+      Auton("Skills Auto. \t this is our skills auto.", MainSkillsAuto)
   });
 
   // Initialize chassis and auton selector
@@ -153,7 +153,6 @@ void opcontrol() {
 
       chassis.pid_tuner_iterate();  // Allow PID Tuner to iterate
     }
-
 
     chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // . . .

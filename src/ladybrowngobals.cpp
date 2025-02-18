@@ -7,7 +7,7 @@
 
 // LB variables
 const int LBSates = 3;
-int statesArray[LBSates] = {0, -320, -1900};
+int statesArray[LBSates] = {0, -340, -1900};
 int currentState = 0;
 int targetAngle = 0;
 

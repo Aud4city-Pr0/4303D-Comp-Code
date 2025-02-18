@@ -1,9 +1,7 @@
 #include "autons.hpp"
-#include "EZ-Template/piston.hpp"
 #include "main.h"
 #include "pros/rtos.hpp"
-#include "subsystems.hpp"
-#include "ladybrownglobals.hpp"
+#include "autonglobals.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -39,68 +37,6 @@ void default_constants() {
 // Make your own autonomous functions here!
 // . . .
 
-// Mech enums
-// This is where you will find enums for our mechs
-
-// The pistion exstention status enum
-enum PistionStatus {
-  RETRACT = 0,
-  EXTEND = 1
-};
-
-// The intake on/off status enum
-enum IntakeStatus {
-  INTAKE_OFF = 0,
-  INTAKE_ON = 1 
-};
-
-// The lady brown status enum
-enum LadyBrownStatus {
-  BROWN_IDLE = 0,
-  BROWN_LOAD = 1,
-  BROWN_SCORE = 2
-};
-
-
-// Auton bot mech functions
-// This section will be for our autons bot mech fucntions
-// You will find functions for our Mogo, Intake and other parts of our bot that will be used in auto
-
-// the lady brown function
-void set_lady_brown_status(LadyBrownStatus Status) {
-  if(Status == LadyBrownStatus::BROWN_SCORE) {
-    setLBState(2);
-  } else if(Status == LadyBrownStatus::BROWN_IDLE) {
-    setLBState(0);
-  } else if(Status == LadyBrownStatus::BROWN_LOAD) {
-    setLBState(1);
-  }
-
-}
-
-// The pistion controll function
-void set_pistion_status(ez::Piston pistionToExtend, PistionStatus Status) {
-  if(Status == PistionStatus::EXTEND) {
-    // extend the mogo or doinker
-    pistionToExtend.set(true);
-  } else if(Status == PistionStatus::RETRACT) {
-    // retract the mogo or doinker
-    pistionToExtend.set(false);
-  }
-}
-
-// The intake function
-void set_intake_status(IntakeStatus Status) {
-  if(Status == IntakeStatus::INTAKE_ON) {
-    // turn on the intake
-    IntakeMotor.move_voltage(-12000);
-  } else if(Status == IntakeStatus::INTAKE_OFF) {
-    // turn the intake off
-    IntakeMotor.brake();
-  }
-}
-
-
 // The Comp Autos
 // Autonomus functions that are under the "Comp Autos" section will be used in auton.
 // This will mainly contain our red and blue autos, the skills auto will be under another section.
@@ -116,17 +52,21 @@ void RightRedAuto() {
   // intake moves the ring onto the goal
   set_intake_status(IntakeStatus::INTAKE_ON);
   pros::delay(1000);
-  chassis.pid_drive_set(24_in, 75);
+  chassis.pid_turn_set(100_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(27_in, 75);
+  chassis.pid_wait();
+  chassis.pid_turn_set(89_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-27_in, 75);
   chassis.pid_speed_max_set(DRIVE_SPEED);
   chassis.pid_wait();
-  // mogo realeases the goal
-  set_intake_status(IntakeStatus::INTAKE_OFF);
-  set_pistion_status(MogoMech, PistionStatus::EXTEND);
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_turn_set(-150_deg, TURN_SPEED);
   chassis.pid_wait();
-  chassis.pid_drive_set(36_in, DRIVE_SPEED);
-  chassis.pid_wait();
+  chassis.pid_drive_set(12_in, DRIVE_SPEED);
   set_lady_brown_status(LadyBrownStatus::BROWN_SCORE);
+  chassis.pid_wait();
+  set_intake_status(IntakeStatus::INTAKE_OFF);
   // the end of our normal auto
 
 }
@@ -159,7 +99,7 @@ void LeftRedAuto() {
 void RightBlueAuto() {
   set_pistion_status(MogoMech, PistionStatus::EXTEND);
   // This will contain our normal red auto
-  chassis.pid_drive_set(-34_in, 75);
+  chassis.pid_drive_set(-36_in, 75);
   chassis.pid_wait();
   // mogo clamp down
   set_pistion_status(MogoMech, PistionStatus::RETRACT);
@@ -167,17 +107,21 @@ void RightBlueAuto() {
   // intake moves the ring onto the goal
   set_intake_status(IntakeStatus::INTAKE_ON);
   pros::delay(1000);
+  chassis.pid_turn_set(-95_deg, TURN_SPEED);
+  chassis.pid_wait();
   chassis.pid_drive_set(24_in, 75);
+  chassis.pid_wait();
+  chassis.pid_turn_set(-95_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-24_in, 75);
   chassis.pid_speed_max_set(DRIVE_SPEED);
   chassis.pid_wait();
-  // mogo realeases the goal
-  set_intake_status(IntakeStatus::INTAKE_OFF);
-  set_pistion_status(MogoMech, PistionStatus::EXTEND);
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_turn_set(-197_deg, TURN_SPEED);
   chassis.pid_wait();
-  chassis.pid_drive_set(36_in, DRIVE_SPEED);
-  chassis.pid_wait();
+  chassis.pid_drive_set(12_in, DRIVE_SPEED);
   set_lady_brown_status(LadyBrownStatus::BROWN_SCORE);
+  chassis.pid_wait();
+  set_intake_status(IntakeStatus::INTAKE_OFF);
   // the end of our normal auto
 }
 
@@ -207,33 +151,71 @@ void LeftBlueAuto() {
 
 void MainSkillsAuto() {
   // This is the function that will contain skills auto
- set_pistion_status(MogoMech, PistionStatus::EXTEND);
- // drive to goal
- chassis.pid_drive_set(-7_in, 55);
- chassis.pid_wait();
- // clamp down mogo
- pros::delay(1000);
- set_pistion_status(MogoMech, PistionStatus::RETRACT);
- // intake
+  // puts preload on aliance stake for 3 points
  set_intake_status(IntakeStatus::INTAKE_ON);
- pros::delay(1000);
- chassis.pid_turn_set(-180_deg, TURN_SPEED);
- chassis.pid_wait();
- chassis.pid_drive_set(25_in, 55);
+ pros::delay(990);
+ set_intake_status(IntakeStatus::INTAKE_OFF);
+ chassis.pid_drive_set(12_in, 55);
  chassis.pid_wait();
  chassis.pid_turn_set(90_deg, TURN_SPEED);
+ set_pistion_status(MogoMech, EXTEND);
+ chassis.pid_wait();
+ chassis.pid_drive_set(-25_in, 55);
+ chassis.pid_wait();
+ // clamp down mogo
+ set_pistion_status(MogoMech, PistionStatus::RETRACT);
+ pros::delay(1000);
+ set_intake_status(IntakeStatus::INTAKE_ON);
+ chassis.pid_turn_set(0_deg, TURN_SPEED);
  chassis.pid_wait();
  chassis.pid_drive_set(25_in, 55);
  chassis.pid_wait();
- chassis.pid_turn_set(99_deg, TURN_SPEED);
+ chassis.pid_turn_set(-100_deg, TURN_SPEED);
  chassis.pid_wait();
- chassis.pid_drive_set(34_in, 55);
+ chassis.pid_drive_set(25_in, 55);
+ chassis.pid_wait();
+ chassis.pid_turn_set(180_deg, TURN_SPEED);
+ chassis.pid_wait();
+ chassis.pid_drive_set(25_in, 55);
+ chassis.pid_wait();
+ chassis.pid_turn_set(45_deg, TURN_SPEED);
+ chassis.pid_wait();
+ chassis.pid_drive_set(-12_in, 55);
+ set_pistion_status(MogoMech, PistionStatus::EXTEND);
+ chassis.pid_wait();
+ chassis.pid_drive_set(12_in, 55);
+ chassis.pid_wait();
+ chassis.pid_turn_set(90_deg, TURN_SPEED);
  chassis.pid_speed_max_set(DRIVE_SPEED);
  chassis.pid_wait();
- chassis.pid_turn_set(-95_deg, TURN_SPEED);
  set_intake_status(IntakeStatus::INTAKE_OFF);
+ chassis.pid_drive_set(35_in, DRIVE_SPEED);
  chassis.pid_wait();
- chassis.pid_drive_set(-10_in, DRIVE_SPEED);
+ chassis.pid_turn_set(-95_deg, TURN_SPEED);
+ chassis.pid_speed_max_set(55);
+ chassis.pid_wait();
+ chassis.pid_drive_set(-40_in, 55);
+ chassis.pid_wait();
+ set_pistion_status(MogoMech, PistionStatus::RETRACT);
+ pros::delay(1000);
+ set_intake_status(IntakeStatus::INTAKE_ON);
+ chassis.pid_turn_set(0_deg, TURN_SPEED);
+ chassis.pid_wait();
+ chassis.pid_drive_set(26_in, 55);
+ chassis.pid_wait();
+ chassis.pid_turn_set(100_deg, TURN_SPEED);
+ chassis.pid_wait();
+ chassis.pid_drive_set(26_in, 55);
+ chassis.pid_wait();
+ chassis.pid_turn_set(-180_deg, TURN_SPEED);
+ chassis.pid_wait();
+ chassis.pid_drive_set(26_in, 55);
+ chassis.pid_wait();
+ chassis.pid_turn_set(-45_deg, TURN_SPEED);
+ chassis.pid_wait();
+ chassis.pid_drive_set(-12_in, 55);
  set_pistion_status(MogoMech, PistionStatus::EXTEND);
+ chassis.pid_wait();
+ chassis.pid_drive_set(12_in, 55);
  chassis.pid_wait();
 }
