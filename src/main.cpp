@@ -17,10 +17,10 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {-5, -1, -4},     // Left Chassis Ports (negative port will reverse it!)
+    {-5, -8, -4},     // Left Chassis Ports (negative port will reverse it!)
     {17, 10, 13},  // Right Chassis Ports (negative port will reverse it!)
 
-    7,      // IMU Port
+    6,      // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM
 
@@ -60,10 +60,10 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       // Our team autos (including skills)
-      Auton("Two Ring With Tower Touch (RIGHT) \t Gets two rings on goal and ends with lb touching tower.", RightRedAuto),
-      Auton("One Ring On Mogo (RIGHT) \t Puts on ring on a mogo.", LeftRedAuto),
-      Auton("Two Ring With Tower Touch (LEFT) \t Gets two rings on goal and ends with lb touching tower.", RightBlueAuto),
-      Auton("One Ring On Mogo (LEFT) \t Puts on ring on a mogo.", LeftBlueAuto),
+      Auton("Four Ring With Tower Touch (RIGHT) \t Gets four rings on goal and ends with lb touching tower.", RightRedAuto),
+      Auton("Two Ring On Mogo Third Goal Clamp (RIGHT) \t Puts two rings on a mogo and clamps on third goal.", LeftRedAuto),
+      Auton("Four Ring With Tower Touch (LEFT) \t Gets four rings on goal and ends with lb touching tower.", RightBlueAuto),
+      Auton("Two Ring On Mogo and Third Goal Clamp (LEFT) \t Puts two rings on a mogo and clamps on third goal.", LeftBlueAuto),
       Auton("Skills Auto. \t this is our skills auto.", MainSkillsAuto)
   });
 
@@ -163,7 +163,7 @@ void opcontrol() {
     // In this section, you will find the button controlls for our mechs (Intake, Mog, Etc.)
 
     MogoMech.button_toggle(master.get_digital(DIGITAL_A));
-    DoinkerMech.button_toggle(master.get_digital(DIGITAL_B));
+    DoinkerMech.button_toggle(master.get_digital(DIGITAL_Y));
 
     if (master.get_digital(DIGITAL_R1)) {
       IntakeMotor.move_velocity(-600);
